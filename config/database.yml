@@ -5,7 +5,9 @@
 #   gem 'postgresql'
 development:
   adapter: postgresql
-  database: db/development.postgresql
+  database: mydb
+  username: postgres
+  password: password
   pool: 5
   timeout: 5000
 

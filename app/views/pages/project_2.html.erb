@@ -1,0 +1,17 @@
+<p>To add Bootstrap to the Rails project I chose to use the 'bootstrap-sass' gem, as it seems to be better supported. I followed the guide on the <a href="https://github.com/thomas-mcdonald/bootstrap-sass/blob/3/docs/RAILS.md">project's github</a>.
+</p>
+
+<ul>
+    <li> I added 'bootstrap-sass', '~> 2.3.2.1' to the Gemfile </li>
+    <li> I ran 'bundle install' </li>
+    <li> I added '//= require bootstrap' to application.js </li>
+
+    <li> I converted application.css to application.css.scss </li>
+
+    <li> I added '@import "bootstrap";' to application.css.scss </li>
+
+        (I think these last two steps are correct. I have not yet read every single page on the Rails site but it sounds like the best option.)
+    <li> jQuery is already installed so I didn't have to do anything for that. </li>
+    <li> I added this page (project_2.html.erb) to app/views and then added a route for it in config/routes.rb. </li>
+</ul>
+
