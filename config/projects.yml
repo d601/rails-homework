@@ -7,3 +7,6 @@ project_1:
 project_2:
   url: "/pages/project_2"
   description: "Description of Bootstrap set up"
+project_3:
+  url: "/calendar"
+  description: "A basic interactive calendar (non-persistent)"
