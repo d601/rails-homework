@@ -1,1 +1,16 @@
-test
+<table>
+  <tr>
+    <th>&lt;&lt;</th>
+    <th>&lt;</th>
+    <th colspan="3">January</th>
+    <th>&gt;</th>
+    <th>&gt;&gt;</th>
+  </tr>
+  <% for i in 0..5 %>
+    <tr>
+    <% for j in 0..7 %>
+      <td>day</td>
+    <% end %>
+    </tr>
+  <% end %>
+</table>
