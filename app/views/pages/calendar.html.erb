@@ -1,10 +1,17 @@
+<% days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
+           "Saturday"] %>
 <table>
   <tr>
     <th>&lt;&lt;</th>
     <th>&lt;</th>
-    <th colspan="3">January</th>
+    <th colspan="3" id="month">January 2013</th>
     <th>&gt;</th>
     <th>&gt;&gt;</th>
+  </tr>
+  <tr>
+    <% for day in days %>
+      <th><%= day %></th>
+    <% end %>
   </tr>
   <% for i in 0..4 %>
     <tr>
