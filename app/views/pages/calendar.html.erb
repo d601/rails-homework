@@ -18,12 +18,37 @@
 </table>
 
 <script>
-  function getNumberOfDaysInMonth(month, year)
+  // Note that month starts with January at 0 - so October is 9, not September.
+
+  function getNumberOfDaysInMonth(year, month)
   {
     return (new Date(year, month, 0)).getDate();
   }
 
+  function getFirstDayOfMonth(year, month)
+  {
+    return (new Date(year, month, 1)).getDay();
+  }
+
+  function redrawCalendar(year, month)
+  {
+    firstDay = getFirstDayOfMonth(year, month);
+    numberOfDays = getNumberOfDaysInMonth(year, month);
+
+    for (var i = 0; i <= 5; i++) {
+      for (var j = 0; j <= 7; j++) {
+        if (((i * 5 + j) >= firstDay) && ((i * 5 + j) <= numberOfDays)) {
+          $("#cell\\[" + i + "," + j + "\\]").text(i * 5 + j);
+          console.log("true on cell " + i + " " + j);
+        } else {
+          $("#cell\\[" + i + "," + j + "\\]").text("");
+          console.log("false on cell " + i + " " + j);
+        }
+      }
+    }
+  }  
+
   $(document).ready(function() {
-    alert(getNumberOfDaysInMonth(10, 2013));
+    redrawCalendar(2013, 0);
   });
 </script>
