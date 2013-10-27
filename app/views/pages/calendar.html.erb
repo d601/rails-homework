@@ -8,7 +8,7 @@
   </tr>
   <% for i in 0..4 %>
     <tr>
-    <% for j in 0..7 %>
+    <% for j in 0..6 %>
       <td id="<%= "cell_#{i}_#{j}" %>">
         <%= i * 5 + j %>
       </td>
@@ -35,20 +35,18 @@
     firstDay = getFirstDayOfMonth(year, month);
     numberOfDays = getNumberOfDaysInMonth(year, month);
 
-    alert(numberOfDays);
-
     day = 1;
 
-    for (var i = 0; i <= 5; i++) {
-      for (var j = 0; j <= 7; j++) {
-        if (((i * 5 + j) >= firstDay) && ((i * 5 + j) <= numberOfDays)) {
+    for (var i = 0; i < 5; i++) {
+      for (var j = 0; j < 7; j++) {
+        if (((i * 5 + j) >= firstDay) && (day <= numberOfDays)) {
           $("#cell_" + i + "_" + j).text(day++);
         } else {
           $("#cell_" + i + "_" + j).text("");
         }
       }
     }
-  }  
+  }
 
   $(document).ready(function() {
     redrawCalendar(2013, 0);
