@@ -6,10 +6,10 @@
     <th>&gt;</th>
     <th>&gt;&gt;</th>
   </tr>
-  <% for i in 0..5 %>
+  <% for i in 0..4 %>
     <tr>
     <% for j in 0..7 %>
-      <td id="<%= "cell[#{i},#{j}]" %>">
+      <td id="<%= "cell_#{i}_#{j}" %>">
         <%= i * 5 + j %>
       </td>
     <% end %>
@@ -35,14 +35,16 @@
     firstDay = getFirstDayOfMonth(year, month);
     numberOfDays = getNumberOfDaysInMonth(year, month);
 
+    alert(numberOfDays);
+
+    day = 1;
+
     for (var i = 0; i <= 5; i++) {
       for (var j = 0; j <= 7; j++) {
         if (((i * 5 + j) >= firstDay) && ((i * 5 + j) <= numberOfDays)) {
-          $("#cell\\[" + i + "," + j + "\\]").text(i * 5 + j);
-          console.log("true on cell " + i + " " + j);
+          $("#cell_" + i + "_" + j).text(day++);
         } else {
-          $("#cell\\[" + i + "," + j + "\\]").text("");
-          console.log("false on cell " + i + " " + j);
+          $("#cell_" + i + "_" + j).text("");
         }
       }
     }
