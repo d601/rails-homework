@@ -1,5 +1,25 @@
 <% days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
            "Saturday"] %>
+<p>
+  Time <br />
+  <select>
+    <% for hour in 0..23 %>
+      <option value="hours_<%= hour %>"><%= hour %></option>
+    <% end %>
+  </select>
+  :
+  <select>
+    <% for minute in 0..59 %>
+      <option value="minute_<%= minute %>"><%= minute %></option>
+    <% end %>
+  </select>
+</p>
+
+<p>
+  Description <br />
+  <input type="text"></input>
+</p>
+
 <table>
   <tr>
     <th><a href="javascript:setDate(-1, 0);">&lt;&lt;</a></th>
