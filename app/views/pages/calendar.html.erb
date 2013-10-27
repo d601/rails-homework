@@ -2,11 +2,11 @@
            "Saturday"] %>
 <table>
   <tr>
-    <th>&lt;&lt;</th>
-    <th>&lt;</th>
+    <th><a href="javascript:setDate(-1, 0);">&lt;&lt;</a></th>
+    <th><a href="javascript:setDate(0, -1);">&lt;</a></th>
     <th colspan="3" id="month">January 2013</th>
-    <th>&gt;</th>
-    <th>&gt;&gt;</th>
+    <th><a href="javascript:setDate(0, 1);">&gt;</a></th>
+    <th><a href="javascript:setDate(1, 0);">&gt;&gt;</a></th>
   </tr>
   <tr>
     <% for day in days %>
@@ -26,6 +26,8 @@
 
 <script>
   // Note that month starts with January at 0 - so October is 9, not September.
+  months = ["January", "Febuary", "March", "April", "May", "June", "July",
+            "August", "September", "October", "November", "December"];
 
   function getNumberOfDaysInMonth(year, month)
   {
@@ -39,6 +41,8 @@
 
   function redrawCalendar(year, month)
   {
+    $("#month").text(months[month] + " " + year);
+
     firstDay = getFirstDayOfMonth(year, month);
     numberOfDays = getNumberOfDaysInMonth(year, month);
 
@@ -55,7 +59,34 @@
     }
   }
 
+  // setMonth() takes a number of years/months to go up or down
+  // For now don't use values larger than +/- 1, I didn't have the time to do
+  // the correct math. -js
+  function setDate(yearsDelta, monthsDelta) {
+    year += yearsDelta;
+    month += monthsDelta;
+    
+    // Change the year if necessary
+    if (month > 11) {
+      year += 1;
+      month = 0;
+    } else if (month < 0) {
+      year -= 1;
+      month = 11;
+    }
+
+    redrawCalendar(year, month);
+  }
+
   $(document).ready(function() {
-    redrawCalendar(2013, 0);
-  });
+    // Get the current date
+    var date = new Date();
+
+    // Month and year are attached to window so they persist (globals)
+    window.month = date.getMonth();
+    window.year = date.getFullYear();
+
+    // Redraw the calendar so it matches the current date
+    redrawCalendar(year, month);
+    });
 </script>
