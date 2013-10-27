@@ -16,3 +16,14 @@
     </tr>
   <% end %>
 </table>
+
+<script>
+  function getNumberOfDaysInMonth(month, year)
+  {
+    return (new Date(year, month, 0)).getDate();
+  }
+
+  $(document).ready(function() {
+    alert(getNumberOfDaysInMonth(10, 2013));
+  });
+</script>
