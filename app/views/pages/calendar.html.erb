@@ -2,25 +2,25 @@
            "Saturday"] %>
 <p>
   Time <br />
-  <select>
+  <select id="hour">
     <% for hour in 0..23 %>
-      <option value="hours_<%= hour %>"><%= hour %></option>
+      <option value="<%= hour %>"><%= hour %></option>
     <% end %>
   </select>
   :
-  <select>
+  <select id="minute">
     <% for minute in 0..59 %>
-      <option value="minute_<%= minute %>"><%= minute %></option>
+      <option value="<%= minute %>"><%= minute %></option>
     <% end %>
   </select>
 </p>
 
 <p>
   Description <br />
-  <input type="text"></input>
+  <input id="description" type="text"></input>
 </p>
 
-<table class="table table-bordered">
+<table id="cal_table" class="table table-bordered">
   <tr>
     <th><a href="javascript:setDate(-1, 0);">&lt;&lt;</a></th>
     <th><a href="javascript:setDate(0, -1);">&lt;</a></th>
@@ -33,7 +33,7 @@
       <th><%= day %></th>
     <% end %>
   </tr>
-  <% for i in 0..4 %>
+  <% for i in 0..5 %>
     <tr>
     <% for j in 0..6 %>
       <td id="<%= "cell_#{i}_#{j}" %>">
@@ -51,12 +51,17 @@
 
   function getNumberOfDaysInMonth(year, month)
   {
-    return (new Date(year, month, 0)).getDate();
+    return (new Date(year, month + 1, 0)).getDate();
   }
 
   function getFirstDayOfMonth(year, month)
   {
     return (new Date(year, month, 1)).getDay();
+  }
+
+  function getCurrentDayMonthYear(){
+
+    return (new Date());
   }
 
   function redrawCalendar(year, month)
@@ -65,16 +70,30 @@
 
     firstDay = getFirstDayOfMonth(year, month);
     numberOfDays = getNumberOfDaysInMonth(year, month);
+    currentDay = getCurrentDayMonthYear().getDate();
+    currentMonth = getCurrentDayMonthYear().getMonth();
+    currentYear = getCurrentDayMonthYear().getFullYear();
 
     day = 1;
+    count= 0;
 
-    for (var i = 0; i < 5; i++) {
+    for (var i = 0; i < 6; i++) {
       for (var j = 0; j < 7; j++) {
-        if (((i * 5 + j) >= firstDay) && (day <= numberOfDays)) {
+        if (((i * 6 + j) >= firstDay) && (day <= numberOfDays)) {
           $("#cell_" + i + "_" + j).text(day++);
         } else {
           $("#cell_" + i + "_" + j).text("");
         }
+
+        //highlights current day in light blue. Makes sure to unhighlight in other months.
+        //there is a better way to do this. If I have time I'll implement it.
+        if((year == currentYear) && (month == currentMonth) && (day == currentDay)){
+          $("#cell_" + i + "_" + j).css("backgroundColor", "lightblue");
+        }
+        else{
+          $("#cell_" + i + "_" + j).css("backgroundColor", "white");
+        } 
+
       }
     }
   }
@@ -98,6 +117,24 @@
 
     redrawCalendar(year, month);
   }
+
+
+  //If a click occurs on the table add the a div containing the information to be logged. 
+  $('#cal_table td').click(function(){
+
+      //find location of cell clicked
+      var rowIndex = $(this).parent().index('#cal_table tr');
+      var tdIndex = $(this).index('#cal_table tr:eq('+rowIndex+') td');
+
+      //if the cell is not empty we are able to add otherwise it is an empty cell. Can't add to empty cell.
+      if($(this).html()){
+            $(this).append('<div id="event">' + $("#hour").val() + ":" + $("#minute").val() + $("#description").val() + '</div>');
+          
+            $("#hour").val($("#hour option:first").val());
+            $("#minute").val($("#minute option:first").val());
+            $("#description").val('');
+      }
+  });
 
   $(document).ready(function()
   {
