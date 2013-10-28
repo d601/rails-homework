@@ -120,12 +120,7 @@
 
   //If a click occurs on the table add a div containing the information to be logged. 
   $('#cal_table td').click(function(){
-
-      //find location of cell clicked
-      var rowIndex = $(this).parent().index('#cal_table tr');
-      var tdIndex = $(this).index('#cal_table tr:eq('+rowIndex+') td');
     
-
       //if the cell is not empty we are able to add otherwise it is an empty cell. Can't add to empty cell.
       if($(this).html()){
 
