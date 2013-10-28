@@ -125,13 +125,16 @@
       var rowIndex = $(this).parent().index('#cal_table tr');
       var tdIndex = $(this).index('#cal_table tr:eq('+rowIndex+') td');
     
-      // Silently fail if the user doesn't enter a description
-      if ($("#description").val() == "") {
-        return;
-      }
 
       //if the cell is not empty we are able to add otherwise it is an empty cell. Can't add to empty cell.
       if($(this).html()){
+
+            // Fail if the user doesn't enter a description
+            if ($("#description").val() == "") {
+              alert("Please enter a description");
+              return;
+            }
+
             $(this).append('<div id="event">' + $("#hour").val() + ":" + $("#minute").val() + $("#description").val() + '</div>');
           
             $("#hour").val($("#hour option:first").val());
