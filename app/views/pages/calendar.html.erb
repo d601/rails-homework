@@ -64,6 +64,11 @@
     return (new Date());
   }
 
+  function cell(i, j)
+  {
+    return $("#cell_" + i + "_" + j);
+  }
+
   function redrawCalendar(year, month)
   {
     $("#month").text(months[month] + " " + year);
@@ -80,18 +85,18 @@
     for (var i = 0; i < 6; i++) {
       for (var j = 0; j < 7; j++) {
         if (((i * 6 + j) >= firstDay) && (day <= numberOfDays)) {
-          $("#cell_" + i + "_" + j).text(day++);
+          cell(i, j).text(day++);
         } else {
-          $("#cell_" + i + "_" + j).text("");
+          cell(i, j).text("");
         }
 
         //highlights current day in light blue. Makes sure to unhighlight in other months.
         //there is a better way to do this. If I have time I'll implement it.
         if((year == currentYear) && (month == currentMonth) && (day == currentDay + 1)){
-          $("#cell_" + i + "_" + j).css("backgroundColor", "lightblue");
+          cell(i, j).css("backgroundColor", "lightblue");
         }
         else{
-          $("#cell_" + i + "_" + j).css("backgroundColor", "white");
+          cell(i, j).css("backgroundColor", "white");
         } 
 
       }
