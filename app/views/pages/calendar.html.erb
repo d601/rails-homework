@@ -28,11 +28,13 @@
     <th><a href="javascript:setDate(0, 1);">&gt;</a></th>
     <th><a href="javascript:setDate(1, 0);">&gt;&gt;</a></th>
   </tr>
-  <tr>
+  <tr id="calendar_header">
     <% for day in days %>
       <th><%= day %></th>
     <% end %>
   </tr>
+
+<!--
   <% for i in 0..5 %>
     <tr>
     <% for j in 0..6 %>
@@ -42,4 +44,6 @@
     <% end %>
     </tr>
   <% end %>
+-->
+
 </table>

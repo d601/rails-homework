@@ -22,6 +22,11 @@
     return $("#cell_" + i + "_" + j);
   }
 
+  function addBlankCell()
+  {
+    
+
+
   function redrawCalendar(year, month)
   {
     $("#month").text(months[month] + " " + year);
@@ -35,6 +40,17 @@
     day = 1;
     count= 0;
 
+    $("tr #calendar_body").children().remove()
+
+    calendar_html = "<tr>"
+    /*
+    for (var i = 0; i < 6; i++) {
+      for (var j = 0; j < 7; j++) {
+    */
+        calendar_html += "<td data-date="
+    
+    $("tr #calendar_header").after.insert(
+/*
     for (var i = 0; i < 6; i++) {
       for (var j = 0; j < 7; j++) {
         if (((i * 6 + j) >= firstDay) && (day <= numberOfDays)) {
@@ -54,6 +70,7 @@
 
       }
     }
+  */
   }
 
   // setMonth() takes a number of years/months to go up or down
