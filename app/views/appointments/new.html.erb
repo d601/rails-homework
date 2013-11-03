@@ -2,7 +2,7 @@
    # the calendar UI, and if this were deployed on an actual website, this page
    # would probably be removed. %>
 
-<%= form_for :appointment do |f| %>
+<%= form_for :appointment, url: appointments_path do |f| %>
   <p>
     <%= f.label :year %><br />
     <%= f.text_field :year %><br />
