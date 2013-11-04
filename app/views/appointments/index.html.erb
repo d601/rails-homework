@@ -1,1 +1,15 @@
-stuff goes here
+<h1>Listing appointments</h1>
+ 
+<table>
+  <tr>
+    <th>Time</th>
+    <th>Description</th>
+  </tr>
+ 
+  <% @appointments.each do |appointment| %>
+    <tr>
+      <td><%= appointment.time %></td>
+      <td><%= appointment.description %></td>
+    </tr>
+  <% end %>
+</table>
