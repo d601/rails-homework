@@ -1,6 +1,11 @@
 class AppointmentsController < ApplicationController
   def index
-    @appointments = Appointment.where(time: params[:start]..params[:end])
+    @appointments = if params[:start] and params[:end]
+                      Appointment.where(time: params[:start]..params[:end])
+                    else
+                      Appointment.all
+                    end
+
     render json: @appointments
   end
   
