@@ -1,6 +1,7 @@
 class AppointmentsController < ApplicationController
   def index
     @appointments = Appointment.all
+    render json: @appointments
   end
   
   def new
@@ -11,28 +12,24 @@ class AppointmentsController < ApplicationController
     post_data = params[:appointment]
 
     @appointment = Appointment.new
-    @appointment.description = post_data[:description]
 
     begin
+      @appointment.description = post_data[:description]
       @appointment.time = DateTime.new(Integer(post_data[:year]),
                                       Integer(post_data[:month]),
                                       Integer(post_data[:day]),
                                       Integer(post_data[:hour]),
                                       Integer(post_data[:minute]))
-    rescue ArgumentError
-      render json: "error"
-      return
-    end
+      redirect_to @appointment if @appointment.save
 
-    if @appointment.save
-      render json: @appointment, status: :created, location: @appointment
-    else
+    rescue ArgumentError
       render json: @appointment.errors, status: :unprocessable_entity
     end
+
   end
 
   def show
-    render text: "incomplete"
+    render json: Appointment.find(params[:id])
   end
 
   private
