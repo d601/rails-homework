@@ -1,6 +1,6 @@
 class AppointmentsController < ApplicationController
   def index
-    @appointments = Appointment.all
+    @appointments = Appointment.where(time: params[:start]..params[:end])
     render json: @appointments
   end
   

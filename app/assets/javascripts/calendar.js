@@ -32,6 +32,13 @@
     currentMonth = getCurrentDayMonthYear().getMonth();
     currentYear = getCurrentDayMonthYear().getFullYear();
 
+    $.get("/appointments",
+          {start: (new Date(year, month, 1)).toJSON(),
+           end: (new Date(year, month + 1, 1)).toJSON()},
+          function(data) {
+            console.log(JSON.stringify(data));
+          });
+
     day = 1;
     count= 0;
 
