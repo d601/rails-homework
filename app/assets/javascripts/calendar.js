@@ -45,10 +45,11 @@
 
         //highlights current day in light blue. Makes sure to unhighlight in other months.
         //there is a better way to do this. If I have time I'll implement it.
-        if((year == currentYear) && (month == currentMonth) && (day == currentDay + 1)){
+        if ((year == currentYear)
+            && (month == currentMonth)
+            && (day == currentDay + 1)) {
           cell(i, j).css("backgroundColor", "lightblue");
-        }
-        else{
+        } else {
           cell(i, j).css("backgroundColor", "white");
         } 
 
