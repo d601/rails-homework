@@ -2,22 +2,24 @@
    # the calendar UI, and if this were deployed on an actual website, this page
    # would probably be removed. %>
 
+<% time = Time.new %>
+
 <%= form_for :appointment, url: appointments_path do |f| %>
   <p>
     <%= f.label :year %><br />
-    <%= f.text_field :year %><br />
+    <%= f.text_field :year, value: time.year %><br />
     
     <%= f.label :month %><br />
-    <%= f.text_field :month %><br />
+    <%= f.text_field :month, value: time.month %><br />
 
     <%= f.label :day %><br />
-    <%= f.text_field :day %><br />
+    <%= f.text_field :day, value: time.day %><br />
 
     <%= f.label :hour %><br />
-    <%= f.text_field :hour %><br />
+    <%= f.text_field :hour, value: time.hour %><br />
 
     <%= f.label :minute %><br />
-    <%= f.text_field :minute %><br />
+    <%= f.text_field :minute, value: time.min %><br />
   </p>
 
   <p>
