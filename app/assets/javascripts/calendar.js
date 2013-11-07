@@ -36,7 +36,13 @@
           {start: (new Date(year, month, 1)).toJSON(),
            end: (new Date(year, month + 1, 1)).toJSON()},
           function(data) {
+            //console.log(data);
             console.log(JSON.stringify(data));
+            //window.appointments = data;
+            $.each(data, function(i, value) {
+              //console.log(value.time);
+              console.log((new Date(value.time)).getDate());
+            });
           });
 
     day = 1;
