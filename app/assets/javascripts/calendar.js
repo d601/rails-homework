@@ -1,11 +1,23 @@
+/*
+  Todo:
+
+  AugmentedDate is a Date, but this is represented with a has-a relationship.
+  This leads to ugly code like date.date.getDay(). As far as I'm aware there's
+  no way around this because of Javascript's lack of actual inheritance.
+
+  -js
+*/
+
 // ============================================================================
 // AugmentedDate
 // ============================================================================
 
 function AugmentedDate(date)
 {
+  if (!date) {
+    this.date = new Date();
   // JSON responses appear to be strings - but don't pass this instanceof test
-  if (date instanceof String || date.constructor.name == "String") {
+  } else if (date instanceof String || date.constructor.name == "String") {
     this.date = new Date(date);
   } else if (date instanceof Date) {
     this.date = date;
@@ -68,6 +80,8 @@ AugmentedDate.prototype.setDateDelta = function(years, months)
                        this.date.getMonth() + months);
 }
 
+
+/*
 // Returns a reference to the calendar cell for the given day in the current
 // date's month
 // At this point functionality of the calendar is getting mixed with
@@ -88,9 +102,99 @@ AugmentedDate.prototype.getCell = function()
   return this.getCellFromDay(this.date.getDate());
 }
 
+*/
+
+// ============================================================================
+// Calendar
+// ============================================================================
+
+// Ideally this would be a singleton - but javascript is not very expressive,
+// and figuring out how to do this properly will take a good amount of time.
+function Calendar()
+{
+  this.date = new AugmentedDate();
+}
+
+Calendar.prototype.setDate = function(yearsDelta, monthsDelta)
+{
+  this.date.setDateDelta(yearsDelta, monthsDelta);
+
+  redraw(date);
+}
+
+Calendar.prototype.redraw = function()
+{
+  $("#month").text(this.date.getMonthString() + " " + this.date.getFullYear());
+
+  $.get("/appointments",
+        { start: (this.date.getMonthRange()[0]).toJSON(),
+          end: (this.date.getMonthRange()[1]).toJSON() },
+        function(data) {
+          console.log(JSON.stringify(data));
+          $.each(data, function(i, value) {
+            addAppointment(new AugmentedDate(value.time),
+                           value.description);
+          });
+        });
+
+
+  // Clear everything
+  for (var i = 0; i < 42; i++) {
+    cell.text("");
+    cell.css("backgroundColor", "white");
+    cell.data("day", "");
+  }
+
+  // Add day numbers
+  for (var day = 1; day <= date.getDaysInMonth(); day++) {
+    this.getCellFromDay(day).text(day);
+    this.getCellFromDay(day).data("day", day);
+  }
+
+  // Highlight current date if we are on the current month/year
+  var d = new Date();
+  if (this.date.date.getFullYear() == d.getFullYear()
+      && this.date.date.getMonth() == d.getMonth()) {
+      this.getCellFromDay(d.getDate()).css("backgroundColor", "lightblue");
+  }
+}
+
+Calendar.prototype.addAppointment = function(date, text)
+{
+  if (date instanceof AugmentedDate) {
+    element = this.getCellFromDate(date);
+  }
+
+  element.append('<div class="event">' + date.date.getHours() + ":"
+                 + date.date.getMinutes() + " " + text + '</div>');
+}
+
+Calendar.prototype.addAppointmentFromForm(element)
+{
+  
+  
+// day is a number - use when generating default cell values
+Calendar.prototype.getCellFromDay(day)
+{
+  return cell((day + this.date.getFirstDayInMonth() - 1));
+}
+
+// date is an AugmentedDate object - use for JSON responses
+// This does not check if the month/year are wrong
+Calendar.prototype.getCellFromDate(date)
+{
+  return this.getCellFromDay(date.date.getDay());
+}
+  
+
 // ============================================================================
 // Utility functions
 // ============================================================================
+
+function cell(id)
+{
+  return $("#cell_" + id);
+}
 
 function getNumberOfDaysInMonth(year, month)
 {
@@ -107,6 +211,7 @@ function getCurrentDayMonthYear()
   return (new Date());
 }
 
+/*
 function redrawCalendar(date)
 {
   $("#month").text(date.getMonthString() + " " + date.date.getFullYear());
@@ -143,32 +248,17 @@ function redrawCalendar(date)
       date.getCellFromDay(d.getDate()).css("backgroundColor", "lightblue");
   }
 
-}
-// setMonth() takes a number of years/months to go up or down
-// For now don't use values larger than +/- 1, I didn't have the time to do
-// the correct math. -js
+} */
+
+/*
 function setDate(yearsDelta, monthsDelta)
 {
-
-  /*
-  year += yearsDelta;
-  month += monthsDelta;
-  
-  // Change the year if necessary
-  if (month > 11) {
-    year += 1;
-    month = 0;
-  } else if (month < 0) {
-    year -= 1;
-    month = 11;
-  }
-*/
-
   date.setDateDelta(yearsDelta, monthsDelta);
 
   redrawCalendar(date);
-}
+} */
 
+/*
 function addAppointment(date, text)
 {
   if (date instanceof AugmentedDate) {
@@ -179,14 +269,13 @@ function addAppointment(date, text)
                  + date.date.getMinutes() + " " + text + '</div>');
 }
 
-/*
-function postAppointment()
-{
-  ;
-}*/
+*/
 
 $(document).ready(function() {
-  window.date = new AugmentedDate(new Date());
+
+  window.calendar = new Calendar();
+
+  // window.date = new AugmentedDate(new Date());
 
   // Redraw the calendar so it matches the current date
   redrawCalendar(date);
@@ -194,40 +283,40 @@ $(document).ready(function() {
   //If a click occurs on the table add a div containing the information to be logged. 
   $("#cal_table td").click(function(){
     
-      //if the cell is not empty we are able to add otherwise it is an empty cell. Can't add to empty cell.
-      if ($(this).html()) {
+    //if the cell is not empty we are able to add otherwise it is an empty cell. Can't add to empty cell.
+    if ($(this).html()) {
 
-            // Fail if the user doesn't enter a description
-            if ($("#description").val() == "") {
-              alert("Please enter a description");
-              return;
-            }
-
-
-            appointmentTime = new AugmentedDate(new Date(date.date.getFullYear(),
-                                  date.date.getMonth(),
-                                  $(this).data("day"),
-                                  $("#hour").val(),
-                                  $("#minute").val())); 
-
-          addAppointment(appointmentTime, $("#description").val());
-
-        // Month is indexed in ruby - server-side - starting from 1.
-
-            $.post("/appointments",
-                   {"appointment[year]": date.date.getFullYear(),
-                    "appointment[month]": date.date.getMonth() + 1,
-                    "appointment[day]": $(this).data("day"),
-                    "appointment[hour]": $("#hour").val(),
-                    "appointment[minute]": $("#minute").val(),
-                    "appointment[description]": $("#description").val()},
-                    function(data) {
-                      console.log(data);
-                    });
-
-            $("#hour").val($("#hour option:first").val());
-            $("#minute").val($("#minute option:first").val());
-            $("#description").val('');
+      // Fail if the user doesn't enter a description
+      if ($("#description").val() == "") {
+        alert("Please enter a description");
+        return;
       }
+
+
+      appointmentTime = new AugmentedDate(new Date(calendar.date.date.getFullYear(),
+                            calendar.date.date.getMonth(),
+                            $(this).data("day"),
+                            $("#hour").val(),
+                            $("#minute").val())); 
+
+    addAppointment(appointmentTime, $("#description").val());
+
+  // Month is indexed in ruby - server-side - starting from 1.
+
+      $.post("/appointments",
+             {"appointment[year]": date.date.getFullYear(),
+              "appointment[month]": date.date.getMonth() + 1,
+              "appointment[day]": $(this).data("day"),
+              "appointment[hour]": $("#hour").val(),
+              "appointment[minute]": $("#minute").val(),
+              "appointment[description]": $("#description").val()},
+              function(data) {
+                console.log(data);
+              });
+
+      $("#hour").val($("#hour option:first").val());
+      $("#minute").val($("#minute option:first").val());
+      $("#description").val('');
+    }
   });
 });
