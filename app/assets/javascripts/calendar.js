@@ -176,7 +176,7 @@ Calendar.prototype.getCellFromDay = function(day)
 // This does not check if the month/year are wrong
 Calendar.prototype.getCellFromDate = function(date)
 {
-  return this.getCellFromDay(date.date.getDay());
+  return this.getCellFromDay(date.date.getDate());
 }
   
 
