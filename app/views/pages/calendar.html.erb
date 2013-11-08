@@ -3,13 +3,13 @@
 <p>
   Time <br />
   <select id="hour">
-    <% for hour in 0..23 %>
+    <% for hour in 0...24 %>
       <option value="<%= hour %>"><%= hour %></option>
     <% end %>
   </select>
   :
   <select id="minute">
-    <% for minute in 0..59 %>
+    <% for minute in 0...60 %>
       <option value="<%= minute %>"><%= minute %></option>
     <% end %>
   </select>
@@ -33,13 +33,15 @@
       <th><%= day %></th>
     <% end %>
   </tr>
-  <% for i in 0..5 %>
-    <tr>
-    <% for j in 0..6 %>
-      <td id="<%= "cell_#{i}_#{j}" %>">
-        <%= i * 5 + j %>
-      </td>
+
+  <% for cell in 0...42 %>
+    <% if (cell % 7) == 0 %>
+      <tr>
     <% end %>
-    </tr>
+      <td id="<%= "cell_#{cell}" %>"></td>
+    <% if ((cell + 1) % 7) == 0 %>
+      </tr>
+    <% end %>
   <% end %>
+
 </table>

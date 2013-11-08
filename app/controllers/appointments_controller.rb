@@ -20,11 +20,13 @@ class AppointmentsController < ApplicationController
 
     begin
       @appointment.description = post_data[:description]
+      p post_data.inspect
       @appointment.time = DateTime.new(Integer(post_data[:year]),
                                       Integer(post_data[:month]),
                                       Integer(post_data[:day]),
                                       Integer(post_data[:hour]),
                                       Integer(post_data[:minute]))
+      p @appointment.inspect
       redirect_to @appointment if @appointment.save
 
     rescue ArgumentError
