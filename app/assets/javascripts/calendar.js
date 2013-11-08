@@ -161,10 +161,10 @@ Calendar.prototype.addAppointment = function(date, text)
 
 Calendar.prototype.addAppointmentFromForm = function(element)
 {
-  element.append(appointmentMarkup($("#hour"),
-                                   $("#minute"),
+  element.append(appointmentMarkup($("#hour").val(),
+                                   $("#minute").val(),
                                    $("#description").val())); 
- }
+}
  
 // day is a number - use when generating default cell values
 Calendar.prototype.getCellFromDay = function(day)
@@ -235,13 +235,13 @@ $(document).ready(function() {
                             $("#hour").val(),
                             $("#minute").val())); 
 
-    Calendar.addAppointmentFromForm($(this));
+    calendar.addAppointmentFromForm($(this));
 
   // Month is indexed in ruby - server-side - starting from 1.
 
       $.post("/appointments",
-             {"appointment[year]": Calendar.date.date.getFullYear(),
-              "appointment[month]": Calendar.date.date.getMonth() + 1,
+             {"appointment[year]": calendar.date.date.getFullYear(),
+              "appointment[month]": calendar.date.date.getMonth() + 1,
               "appointment[day]": $(this).data("day"),
               "appointment[hour]": $("#hour").val(),
               "appointment[minute]": $("#minute").val(),
