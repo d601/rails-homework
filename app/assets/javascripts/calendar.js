@@ -5,6 +5,18 @@
   This leads to ugly code like date.date.getDay(). As far as I'm aware there's
   no way around this because of Javascript's lack of actual inheritance.
 
+  AugmentedDate and Calendar both have functions that are similar to eachother
+  because some actions are done live and some done as a response to JSON data.
+  The way this is represented could probably be cleaned up a bit.
+
+  Changing the date makes the calendar move around/resize.
+
+  Graphics could be improved.
+
+  javascript:calendar.setDate() calls are ugly.
+
+  Adding appointments could be encapsulated more nicely.
+
   -js
 */
 
@@ -115,38 +127,20 @@ function Calendar()
   this.date = new AugmentedDate();
 }
 
-Calendar.prototype.setDate = function(yearsDelta, monthsDelta)
-{
-  this.date.setDateDelta(yearsDelta, monthsDelta);
-
-  redraw(date);
-}
 
 Calendar.prototype.redraw = function()
 {
-  $("#month").text(this.date.getMonthString() + " " + this.date.getFullYear());
-
-  $.get("/appointments",
-        { start: (this.date.getMonthRange()[0]).toJSON(),
-          end: (this.date.getMonthRange()[1]).toJSON() },
-        function(data) {
-          console.log(JSON.stringify(data));
-          $.each(data, function(i, value) {
-            addAppointment(new AugmentedDate(value.time),
-                           value.description);
-          });
-        });
-
+  $("#month").text(this.date.getMonthString() + " " + this.date.date.getFullYear());
 
   // Clear everything
   for (var i = 0; i < 42; i++) {
-    cell.text("");
-    cell.css("backgroundColor", "white");
-    cell.data("day", "");
+    getCell(i).text("");
+    getCell(i).css("backgroundColor", "white");
+    getCell(i).data("day", "");
   }
 
   // Add day numbers
-  for (var day = 1; day <= date.getDaysInMonth(); day++) {
+  for (var day = 1; day <= this.date.getDaysInMonth(); day++) {
     this.getCellFromDay(day).text(day);
     this.getCellFromDay(day).data("day", day);
   }
@@ -157,6 +151,25 @@ Calendar.prototype.redraw = function()
       && this.date.date.getMonth() == d.getMonth()) {
       this.getCellFromDay(d.getDate()).css("backgroundColor", "lightblue");
   }
+
+  // Load appointments from server
+  $.get("/appointments",
+        { start: (this.date.getMonthRange()[0]).toJSON(),
+          end: (this.date.getMonthRange()[1]).toJSON() },
+        function(data) {
+          console.log(JSON.stringify(data));
+          $.each(data, function(i, value) {
+            window.calendar.addAppointment(new AugmentedDate(value.time),
+                           value.description);
+          });
+        });
+}
+
+Calendar.prototype.setDate = function(yearsDelta, monthsDelta)
+{
+  this.date.setDateDelta(yearsDelta, monthsDelta);
+
+  this.redraw();
 }
 
 Calendar.prototype.addAppointment = function(date, text)
@@ -165,23 +178,27 @@ Calendar.prototype.addAppointment = function(date, text)
     element = this.getCellFromDate(date);
   }
 
-  element.append('<div class="event">' + date.date.getHours() + ":"
-                 + date.date.getMinutes() + " " + text + '</div>');
+  element.append(appointmentMarkup(date.date.getHours(),
+                                   date.date.getMinutes(),
+                                   text));
 }
 
-Calendar.prototype.addAppointmentFromForm(element)
+Calendar.prototype.addAppointmentFromForm = function(element)
 {
-  
-  
+  element.append(appointmentMarkup($("#hour"),
+                                   $("#minute"),
+                                   $("#description").val())); 
+ }
+ 
 // day is a number - use when generating default cell values
-Calendar.prototype.getCellFromDay(day)
+Calendar.prototype.getCellFromDay = function(day)
 {
-  return cell((day + this.date.getFirstDayInMonth() - 1));
+  return getCell((day + this.date.getFirstDayInMonth() - 1));
 }
 
 // date is an AugmentedDate object - use for JSON responses
 // This does not check if the month/year are wrong
-Calendar.prototype.getCellFromDate(date)
+Calendar.prototype.getCellFromDate = function(date)
 {
   return this.getCellFromDay(date.date.getDay());
 }
@@ -191,7 +208,12 @@ Calendar.prototype.getCellFromDate(date)
 // Utility functions
 // ============================================================================
 
-function cell(id)
+function appointmentMarkup(hours, minutes, text)
+{
+  return '<div class="event">' + hours + ":" + minutes + " " + text + '</div>';
+}
+
+function getCell(id)
 {
   return $("#cell_" + id);
 }
@@ -278,7 +300,7 @@ $(document).ready(function() {
   // window.date = new AugmentedDate(new Date());
 
   // Redraw the calendar so it matches the current date
-  redrawCalendar(date);
+  calendar.redraw();
 
   //If a click occurs on the table add a div containing the information to be logged. 
   $("#cal_table td").click(function(){
@@ -299,13 +321,13 @@ $(document).ready(function() {
                             $("#hour").val(),
                             $("#minute").val())); 
 
-    addAppointment(appointmentTime, $("#description").val());
+    Calendar.addAppointmentFromForm($(this));
 
   // Month is indexed in ruby - server-side - starting from 1.
 
       $.post("/appointments",
-             {"appointment[year]": date.date.getFullYear(),
-              "appointment[month]": date.date.getMonth() + 1,
+             {"appointment[year]": Calendar.date.date.getFullYear(),
+              "appointment[month]": Calendar.date.date.getMonth() + 1,
               "appointment[day]": $(this).data("day"),
               "appointment[hour]": $("#hour").val(),
               "appointment[minute]": $("#minute").val(),
