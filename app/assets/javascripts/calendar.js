@@ -92,30 +92,6 @@ AugmentedDate.prototype.setDateDelta = function(years, months)
                        this.date.getMonth() + months);
 }
 
-
-/*
-// Returns a reference to the calendar cell for the given day in the current
-// date's month
-// At this point functionality of the calendar is getting mixed with
-// functionality of the date - it probably wouldn't be overengineering to
-// separate these
-AugmentedDate.prototype.getCellFromDay = function(day)
-{
-  // #cell_ids start at 0
-  return $("#cell_" + (day + this.getFirstDayInMonth() - 1));
-}
-
-// When we draw the calendar, the current day does not matter, so the previous
-// function is provided. However, it's easier to turn JSON date responses into
-// AugmentedDate objects and then use this function.
-// Note that this doesn't check if the year or month are correct!
-AugmentedDate.prototype.getCell = function()
-{
-  return this.getCellFromDay(this.date.getDate());
-}
-
-*/
-
 // ============================================================================
 // Calendar
 // ============================================================================
@@ -233,71 +209,9 @@ function getCurrentDayMonthYear()
   return (new Date());
 }
 
-/*
-function redrawCalendar(date)
-{
-  $("#month").text(date.getMonthString() + " " + date.date.getFullYear());
-
-  $.get("/appointments",
-        { start: (date.getMonthRange()[0]).toJSON(),
-          end: (date.getMonthRange()[1]).toJSON() },
-        function(data) {
-          console.log(JSON.stringify(data));
-          $.each(data, function(i, value) {
-            addAppointment(new AugmentedDate(value.time),
-                           value.description);
-          });
-        });
-
-
-  // Clear everything
-  for (var i = 0; i < 42; i++) {
-    $("#cell_" + i).text("");
-    $("#cell_" + i).css("backgroundColor", "white");
-    $("#cell_" + i).data("day", "");
-  }
-
-  // Add day numbers
-  for (var day = 1; day <= date.getDaysInMonth(); day++) {
-    date.getCellFromDay(day).text(day);
-    date.getCellFromDay(day).data("day", day);
-  }
-
-  // Highlight current date if we are on the current month/year
-  var d = new Date();
-  if (date.date.getFullYear() == d.getFullYear()
-      && date.date.getMonth() == d.getMonth()) {
-      date.getCellFromDay(d.getDate()).css("backgroundColor", "lightblue");
-  }
-
-} */
-
-/*
-function setDate(yearsDelta, monthsDelta)
-{
-  date.setDateDelta(yearsDelta, monthsDelta);
-
-  redrawCalendar(date);
-} */
-
-/*
-function addAppointment(date, text)
-{
-  if (date instanceof AugmentedDate) {
-    element = date.getCell();
-  }
-
-  element.append('<div class="event">' + date.date.getHours() + ":"
-                 + date.date.getMinutes() + " " + text + '</div>');
-}
-
-*/
-
 $(document).ready(function() {
 
   window.calendar = new Calendar();
-
-  // window.date = new AugmentedDate(new Date());
 
   // Redraw the calendar so it matches the current date
   calendar.redraw();
