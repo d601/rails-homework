@@ -18,15 +18,6 @@ AugmentedDate.prototype.months = ["January", "Febuary", "March", "April",
                                   "May", "June", "July", "August", "September",
                                   "October", "November", "December"];
 
-// NB: Year and month in the javascript date object are indexed from 0. Days,
-// however, are indexed from one. At this point it is entirely rational to
-// wonder "what the FUCK were the original javascript developers thinking?"
-
-// I have tried to stay consistent with this design. All the methods work
-// according to day starting at 1. The only exception is the cell ids, and the
-// only time they are referenced directly, on an individual basis, is through
-// the getCell methods, which takes care of this translation.
-
 AugmentedDate.prototype.getDaysInMonth = function()
 {
   // This works because setting the day to 0 actually sets it to the _last_
